@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ETL System - Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-boxplot@1.0.0"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+        .nav-tabs {
+            margin-bottom: 20px;
+        }
+        .tab-content {
+            padding: 20px;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">ETL System - Analysis Results</h1>
+        
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                Statistical Analysis Results
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Mean</th>
+                            <th>Median</th>
+                            <th>Skewness</th>
+                            <th>Kurtosis</th>
+                            <th>Std Dev</th>
+                            <th>Distinct</th>
+                            <th>Nulls</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="result : ${results}">
+                            <td th:text="${result.columnName}"></td>
+                            <td th:text="${result.dataType}"></td>
+                            <td th:text="${result.mean}"></td>
+                            <td th:text="${result.median}"></td>
+                            <td th:text="${result.skewness}"></td>
+                            <td th:text="${result.kurtosis}"></td>
+                            <td th:text="${result.standardDeviation}"></td>
+                            <td th:text="${result.distinctCount}"></td>
+                            <td th:text="${result.nullCount}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div th:each="columnEntry : ${visualizations.chartData}">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 th:text="${columnEntry.key}"></h5>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" th:id="${columnEntry.key + '-histogram-tab'}" 
+                               data-toggle="tab" th:href="'#' + ${columnEntry.key + '-histogram'}" 
+                               role="tab">Histogram</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:id="${columnEntry.key + '-boxplot-tab'}" 
+                               data-toggle="tab" th:href="'#' + ${columnEntry.key + '-boxplot'}" 
+                               role="tab">Box Plot</a>
+                        </li>
+                        <li class="nav-item" th:if="${columnEntry.value.get('timeseries') != null}">
+                            <a class="nav-link" th:id="${columnEntry.key + '-timeseries-tab'}" 
+                               data-toggle="tab" th:href="'#' + ${columnEntry.key + '-timeseries'}" 
+                               role="tab">Time Series</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" th:id="${columnEntry.key + '-histogram'}" 
+                             role="tabpanel">
+                            <div class="chart-container">
+                                <canvas th:id="${columnEntry.key + '-histogram-chart'}"></canvas>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" th:id="${columnEntry.key + '-boxplot'}" role="tabpanel">
+                            <div class="chart-container">
+                                <canvas th:id="${columnEntry.key + '-boxplot-chart'}"></canvas>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" th:id="${columnEntry.key + '-timeseries'}" 
+                             th:if="${columnEntry.value.get('timeseries') != null}" role="tabpanel">
+                            <div class="chart-container">
+                                <canvas th:id="${columnEntry.key + '-timeseries-chart'}"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                // Generate a safe JS variable name from the column name
+                function safeVarName(name) {
+                    return name.replace(/[^a-zA-Z0-9_]/g, '_');
+                }
+                
+                // Histogram
+                (function() {
+                    var columnName = /*[[${columnEntry.key}]]*/ '';
+                    var safeName = safeVarName(columnName);
+                    var ctx = document.getElementById(columnName + '-histogram-chart');
+                    
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: /*[[${columnEntry.value.histogram.labels}]]*/ [],
+                            datasets: [{
+                                label: 'Frequency',
+                                data: /*[[${columnEntry.value.histogram.values}]]*/ [],
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Frequency'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Value Range'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })();
+                
+                // Box Plot
+                (function() {
+                    var columnName = /*[[${columnEntry.key}]]*/ '';
+                    var safeName = safeVarName(columnName);
+                    var ctx = document.getElementById(columnName + '-boxplot-chart');
+                    var boxPlotData = {
+                        min: /*[[${columnEntry.value.boxplot.min}]]*/ 0,
+                        q1: /*[[${columnEntry.value.boxplot.q1}]]*/ 0,
+                        median: /*[[${columnEntry.value.boxplot.median}]]*/ 0,
+                        q3: /*[[${columnEntry.value.boxplot.q3}]]*/ 0,
+                        max: /*[[${columnEntry.value.boxplot.max}]]*/ 0,
+                        outliers: /*[[${columnEntry.value.boxplot.outliers}]]*/ []
+                    };
+                    
+                    // Box Plot Visualization
+new Chart(boxPlotCtx, {
+    type: 'boxplot',
+    data: {
+        labels: ['Distribution'],
+        datasets: [{
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+            outlierColor: '#FF0000',
+            padding: 10,
+            itemRadius: 0,
+            data: [{
+                min: boxPlotData.min,
+                q1: boxPlotData.q1,
+                median: boxPlotData.median,
+                q3: boxPlotData.q3,
+                max: boxPlotData.max,
+                outliers: boxPlotData.outliers
+            }]
+        }]
+    },
+    options: {
+        responsive: true,
+        legend: {
+            display: false
+        },
+        scales: {
+            y: {
+                title: {
+                    display: true,
+                    text: 'Values'
+                }
+            }
+        }
+    }
+});
+                })();
+                
+                // Time Series (if available)
+                /*[# th:if="${columnEntry.value.get('timeseries') != null}"]*/
+                (function() {
+                    var columnName = /*[[${columnEntry.key}]]*/ '';
+                    var safeName = safeVarName(columnName);
+                    var ctx = document.getElementById(columnName + '-timeseries-chart');
+                    
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: /*[[${columnEntry.value.timeseries.labels}]]*/ [],
+                            datasets: [{
+                                label: columnName,
+                                data: /*[[${columnEntry.value.timeseries.values}]]*/ [],
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1,
+                                tension: 0.1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Value'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Time'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })();
+                /*[/]*/
+                /*]]>*/
+            </script>
+        </div>
+        
+        <a href="/" class="btn btn-secondary mt-3">Back to Upload</a>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+/* Custom styles for ETL system */
+body {
+    background-color: #f8f9fa;
+    padding-top: 20px;
+}
+
+.card {
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    margin-bottom: 20px;
+}
+
+.nav-tabs {
+    margin-bottom: 20px;
+}
+
+.tab-content {
+    padding: 20px;
+    border-left: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 0 0 5px 5px;
+    background-color: white;
+}
+
+.table th {
+    white-space: nowrap;
+}
+
+.alert {
+    margin-top: 20px;
+}
