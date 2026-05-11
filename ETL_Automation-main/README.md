@@ -111,8 +111,8 @@ Follow these steps to set up the project locally.
 
 1.  **Clone the Repository**
     ```bash
-  git clone https://github.com/itsA-D/Ingestify-.git
-  cd ETL_Automation-main
+    git clone https://github.com/itsA-D/Ingestify-.git
+    cd ETL_Automation-main
     ```
 
 2.  **Configure Database**
