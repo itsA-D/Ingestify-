@@ -10,29 +10,18 @@
 
 <!-- Badges -->
 <p>
-  <a href="https://github.com/aryasoni28/ETL_Automation/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/aryasoni28/ETL_Automation?style=for-the-badge&color=blue" alt="Contributors" />
-  </a>
-  <a href="https://github.com/aryasoni28/ETL_Automation/network/members">
-    <img src="https://img.shields.io/github/forks/aryasoni28/ETL_Automation?style=for-the-badge&color=orange" alt="Forks" />
-  </a>
-  <a href="https://github.com/aryasoni28/ETL_Automation/stargazers">
-    <img src="https://img.shields.io/github/stars/aryasoni28/ETL_Automation?style=for-the-badge&color=yellow" alt="Stars" />
-  </a>
-  <a href="https://github.com/aryasoni28/ETL_Automation/issues">
-    <img src="https://img.shields.io/github/issues/aryasoni28/ETL_Automation?style=for-the-badge&color=red" alt="Issues" />
-  </a>
-  <a href="https://github.com/aryasoni28/ETL_Automation/blob/master/LICENSE.txt">
-    <img src="https://img.shields.io/github/license/aryasoni28/ETL_Automation?style=for-the-badge&color=green" alt="License" />
-  </a>
+  <img src="https://img.shields.io/badge/Java-17-blue?style=for-the-badge" alt="Java 17" />
+  <img src="https://img.shields.io/badge/Spring%20Boot-2.7-green?style=for-the-badge" alt="Spring Boot" />
+  <img src="https://img.shields.io/badge/Build-Maven-orange?style=for-the-badge" alt="Maven" />
+  <img src="https://img.shields.io/badge/Database-MySQL-lightgrey?style=for-the-badge" alt="MySQL" />
 </p>
   
   <h4>
-    <a href="#-demo">View Demo</a>
-    <span> · </span>
+    <!-- <a href="#-demo">View Demo</a>
+    <span> · </span> -->
     <a href="#-getting-started">Getting Started</a>
     <span> · </span>
-    <a href="https://github.com/aryasoni28/ETL_Automation/issues">Report Bug</a>
+    <a href="#-contact">Contact</a>
   </h4>
 </div>
 
@@ -122,8 +111,8 @@ Follow these steps to set up the project locally.
 
 1.  **Clone the Repository**
     ```bash
-    git clone https://github.com/aryasoni28/ETL_Automation.git
-    cd ETL_Automation
+  git clone https://github.com/itsA-D/Ingestify-.git
+  cd ETL_Automation-main
     ```
 
 2.  **Configure Database**
@@ -180,7 +169,7 @@ The server will start at `http://localhost:8080`.
 
 ## 📞 Contact
 
-**ANKAN DEBNATH** - [LinkedIn Profile](https://www.linkedin.com/in/ankan-debnath-aa6a57259/) - ankandebnath12b@gmail.com
+For questions or collaboration, open an issue in your repository or add your preferred contact details here.
 
 
 
